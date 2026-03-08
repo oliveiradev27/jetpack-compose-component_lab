@@ -7,17 +7,12 @@ Repositório dedicado à exploração e criação de componentes utilizando Jetp
 Este projeto funciona como um laboratório prático de aprendizagem.
 A ideia é construir pequenos componentes isolados para entender melhor:
 
-funcionamento do Jetpack Compose
-
-composição de layouts
-
-gerenciamento de state
-
-recomposição
-
-criação de componentes reutilizáveis
-
-boas práticas de UI declarativa no Android
+- Funcionamento do Jetpack Compose
+- Composição de layouts
+- Gerenciamento de state
+- Recomposição
+- Criação de componentes reutilizáveis
+- Boas práticas de UI declarativa no Android
 
 Em vez de apenas consumir exemplos prontos, este repositório busca aprender construindo.
 
