@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.delay
 
 // =============================================================================
@@ -72,7 +73,7 @@ fun TypingText(
     // é relançado.
     //
     // O loop:
-    //   - Reseta o estado para o início (útil em re-composições com texto novo).
+    //   - Reseta o estado para o início (útil em recomposições com texto novo).
     //   - Itera de 1 até words.size, fazendo delay entre cada palavra.
     //   - Ao terminar, marca isFinished = true e chama o callback.
     // -------------------------------------------------------------------------
@@ -131,6 +132,15 @@ fun TypingText(
     )
 }
 
+@Preview(showBackground = true)
+@Composable
+fun TypingTextPreview() {
+    TypingText(
+        "Olá eu sou o Dollynho, seu amiguinho. vamos brincar?",
+        showCursor = false,
+        intervalMs = 0
+    )
+}
 
 
 
