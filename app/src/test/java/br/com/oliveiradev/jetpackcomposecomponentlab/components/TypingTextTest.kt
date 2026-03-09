@@ -406,7 +406,7 @@ class TypingTextTest {
 
         drainAnimation()
 
-        composeTestRule.onNodeWithText("palavra1", substring = true).assertExists()
+        composeTestRule.onNodeWithText("palabra1", substring = true).assertExists()
         composeTestRule.onNodeWithText("palavra20", substring = true).assertExists()
     }
 }
