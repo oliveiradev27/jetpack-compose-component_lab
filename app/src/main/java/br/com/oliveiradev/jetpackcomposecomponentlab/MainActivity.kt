@@ -10,6 +10,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import br.com.oliveiradev.jetpackcomposecomponentlab.concepts.statehoisting.AuthRepositoryImpl
+import br.com.oliveiradev.jetpackcomposecomponentlab.concepts.statehoisting.LoginScreen
+import br.com.oliveiradev.jetpackcomposecomponentlab.concepts.statehoisting.LoginViewModel
 import br.com.oliveiradev.jetpackcomposecomponentlab.ui.components.TypingText
 import br.com.oliveiradev.jetpackcomposecomponentlab.ui.theme.JetpackComposeComponentLabTheme
 
@@ -44,6 +47,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     JetpackComposeComponentLabTheme {
-        Greeting("Android")
+        val viewModel = LoginViewModel(authRepository = AuthRepositoryImpl())
+        LoginScreen(onLoginSuccess = {}, viewModel)
     }
 }
