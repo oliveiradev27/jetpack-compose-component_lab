@@ -5,7 +5,7 @@
 apply plugin: 'jacoco'
 
 jacoco {
-    toolVersion = "0.8.12"
+    toolVersion = "0.8.13" // versão incluída no Gradle 9.2 — não precisa baixar separado
 }
 
 // Classes geradas automaticamente que devem ser ignoradas na cobertura
@@ -40,15 +40,20 @@ tasks.register('generateJacocoCoverageReport', JacocoReport) {
         csv.required  = false
     }
 
+    // layout.buildDirectory é a API moderna que substitui o depreciado project.buildDir.
+    // .get().asFile resolve o DirectoryProperty para um java.io.File de forma eager,
+    // o que é seguro aqui pois estamos dentro de tasks.register (execução, não configuração).
+    def buildDir = layout.buildDirectory.get().asFile
+
     // Onde estão as classes compiladas (Kotlin → .class)
     def classesDir = fileTree(
-            dir: "${project.buildDir}/tmp/kotlin-classes/debug",
+            dir: "${buildDir}/tmp/kotlin-classes/debug",
             excludes: fileFilter
     )
 
     // Fallback para projetos Java puro ou AGP mais antigo
     def classesJavaDir = fileTree(
-            dir: "${project.buildDir}/intermediates/javac/debug/classes",
+            dir: "${buildDir}/intermediates/javac/debug/classes",
             excludes: fileFilter
     )
 
@@ -62,7 +67,7 @@ tasks.register('generateJacocoCoverageReport', JacocoReport) {
 
     // Arquivo .exec gerado pelo testDebugUnitTest
     executionData.setFrom(fileTree(
-            dir: project.buildDir,
+            dir: buildDir,
             includes: ['jacoco/testDebugUnitTest.exec']
     ))
 }

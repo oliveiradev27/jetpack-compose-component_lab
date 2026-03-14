@@ -39,7 +39,9 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true  // obrigatório para o Robolectric
-            System.setProperty("robolectric.logging", "stdout")
+            all {
+                systemProperty("robolectric.logging", "stdout")
+            }
          }
     }
 }
