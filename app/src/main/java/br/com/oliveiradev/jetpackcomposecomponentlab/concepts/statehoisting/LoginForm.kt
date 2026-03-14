@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.dp
  * LoginForm é 100% stateless.
  *
  * Não sabe que existe um ViewModel, não usa remember,
- * não chama hiltViewModel(). Apenas:
  *  - Exibe o estado recebido via [uiState]
  *  - Delega interações via lambdas ([onEmailChange], [onPasswordChange], [onSubmit])
  *
