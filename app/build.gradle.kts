@@ -1,10 +1,9 @@
-import org.gradle.internal.classpath.Instrumented.systemProperty
-import org.gradle.kotlin.dsl.invoke
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
 }
+
+apply(from = "../scripts/jacoco.gradle")
 
 android {
     namespace = "br.com.oliveiradev.jetpackcomposecomponentlab"
@@ -40,7 +39,7 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true  // obrigatório para o Robolectric
-            systemProperty("robolectric.logging", "stdout")
+            System.setProperty("robolectric.logging", "stdout")
          }
     }
 }
