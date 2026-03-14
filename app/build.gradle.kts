@@ -1,4 +1,5 @@
 import org.gradle.internal.classpath.Instrumented.systemProperty
+import org.gradle.kotlin.dsl.invoke
 
 plugins {
     alias(libs.plugins.android.application)
@@ -75,4 +76,5 @@ dependencies {
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.junit.jupiter.params.v5102)
     testRuntimeOnly(libs.junit.jupiter.engine)
+    testImplementation(libs.turbine)
 }
