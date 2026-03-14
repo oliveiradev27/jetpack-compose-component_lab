@@ -54,6 +54,8 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     needs: test
+    permissions:
+      pull-requests: write  # necessário para a action postar comentário no PR
     steps:
       - uses: actions/checkout@v4
 
@@ -68,17 +70,17 @@ jobs:
         run: chmod +x gradlew
 
       - name: Generate JaCoCo coverage report
-        run: ./gradlew clean generateJacocoCoverageReport  # CORRIGIDO: typo "Repo" → "Report"
+        run: ./gradlew clean generateJacocoCoverageReport
 
       - name: Upload test results on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-results  # CORRIGIDO: nome único para não conflitar com o job test
+          name: coverage-results
           path: app/build/reports/tests/testDebugUnitTest/
 
       - name: Publish Code Coverage Report to PR
-        uses: Madrapps/jacoco-report@v1.3.1  # CORRIGIDO: removidos os colchetes e parênteses em volta da action
+        uses: Madrapps/jacoco-report@v1.7.2
         with:
           paths: |
             ${{ github.workspace }}/**/build/reports/jacoco/generateJacocoCoverageReport/generateJacocoCoverageReport.xml
