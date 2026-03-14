@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+apply(from = "../scripts/jacoco.gradle")
+
 android {
     namespace = "br.com.oliveiradev.jetpackcomposecomponentlab"
     compileSdk = 35
@@ -39,7 +41,9 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true  // obrigatório para o Robolectric
-            systemProperty("robolectric.logging", "stdout")
+            all {
+                systemProperty("robolectric.logging", "stdout")
+            }
          }
     }
 }
@@ -75,4 +79,5 @@ dependencies {
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.junit.jupiter.params.v5102)
     testRuntimeOnly(libs.junit.jupiter.engine)
+    testImplementation(libs.turbine)
 }
