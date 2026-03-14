@@ -24,6 +24,7 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+
   test:
     runs-on: ubuntu-latest
     needs: build
@@ -49,6 +50,7 @@ jobs:
         with:
           name: test-results
           path: app/build/reports/tests/testDebugUnitTest/
+
   coverage:
     runs-on: ubuntu-latest
     needs: test
@@ -66,19 +68,19 @@ jobs:
         run: chmod +x gradlew
 
       - name: Generate JaCoCo coverage report
-        run: ./gradlew clean generateJacocoCoverageRepo
+        run: ./gradlew clean generateJacocoCoverageReport  # CORRIGIDO: typo "Repo" → "Report"
 
       - name: Upload test results on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
+          name: coverage-results  # CORRIGIDO: nome único para não conflitar com o job test
           path: app/build/reports/tests/testDebugUnitTest/
 
       - name: Publish Code Coverage Report to PR
-        uses: [Madrapps/jacoco-report](https://github.com/marketplace/actions/jacoco-report)@v1.3.1
+        uses: Madrapps/jacoco-report@v1.3.1  # CORRIGIDO: removidos os colchetes e parênteses em volta da action
         with:
           paths: |
             ${{ github.workspace }}/**/build/reports/jacoco/generateJacocoCoverageReport/generateJacocoCoverageReport.xml
           token: ${{ secrets.GITHUB_TOKEN }}
-          min-coverage-overall: 80 # Set minimum coverage threshold
+          min-coverage-overall: 80
