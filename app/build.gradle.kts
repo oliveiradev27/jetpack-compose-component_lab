@@ -48,6 +48,21 @@ android {
     }
 }
 
+// Configuração extra para que Robolectric funcione bem com JaCoCo
+tasks.withType<Test>().configureEach {
+    // Evita problemas de verificação de bytecode com classes instrumentadas
+    jvmArgs(
+        "-noverify",
+        "-XX:+IgnoreUnrecognizedVMOptions",
+    )
+
+    // Ajustes específicos do agente JaCoCo para testes unitários (inclui classes "sem localização")
+    extensions.configure<JacocoTaskExtension>("jacoco") {
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
+    }
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
