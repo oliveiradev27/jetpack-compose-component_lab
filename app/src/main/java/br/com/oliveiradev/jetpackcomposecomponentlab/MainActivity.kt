@@ -43,37 +43,42 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Column(modifier.verticalScroll(rememberScrollState())) {
-        Spacer(modifier.height(32.dp))
-        Text(text = "Componente de Texto Dinâmico")
-        Spacer(modifier.height(16.dp))
-
-        TypingText(
-            text = "Hello $name! Sou o Dollynho, seu amiguinho! vamos brincar?!",
-            intervalMs = 500L,
-            showCursor = false,
-            modifier = modifier
-        )
-
-        Spacer(modifier.height(32.dp))
-        Text(text = "Form de Login para consolidar conceito de State Hoisting")
-        Spacer(modifier.height(16.dp))
-
-        LoginScreen(
-            viewModel = LoginViewModel(authRepository = AuthRepositoryImpl()),
-            onLoginSuccess = {}
-        )
-
-        Spacer(modifier.height(32.dp))
-        Text(text = "Card expansível")
-        Spacer(modifier.height(16.dp))
-        ExpandableCard(
-            title = "Título do card",
-            initiallyExpanded = false
+    Scaffold(modifier = modifier.fillMaxSize()) { innerPadding ->
+        Column(
+            Modifier
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
         ) {
-            Text(text = "Conteúdo do card expansível.")
+            Spacer(modifier = Modifier.height(32.dp))
+            Text(text = "Componente de Texto Dinâmico")
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TypingText(
+                text = "Hello $name! Sou o Dollynho, seu amiguinho! vamos brincar?!",
+                intervalMs = 500L,
+                showCursor = false
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+            Text(text = "Form de Login para consolidar conceito de State Hoisting")
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LoginScreen(
+                viewModel = LoginViewModel(authRepository = AuthRepositoryImpl()),
+                onLoginSuccess = {}
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+            Text(text = "Card expansível")
+            Spacer(modifier = Modifier.height(16.dp))
+            ExpandableCard(
+                title = "Título do card",
+                initiallyExpanded = false
+            ) {
+                Text(text = "Conteúdo do card expansível.")
+            }
         }
-     }
+    }
 }
 
 @Preview(showBackground = true)
