@@ -59,6 +59,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         Column(
             Modifier
                 .padding(innerPadding)
+                .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = Modifier.height(32.dp))
