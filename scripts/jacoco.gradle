@@ -5,10 +5,9 @@
 apply plugin: 'jacoco'
 
 jacoco {
-    toolVersion = "0.8.13" // versão incluída no Gradle 9.2 — não precisa baixar separado
+    toolVersion = "0.8.13"
 }
 
-// Classes geradas automaticamente que devem ser ignoradas na cobertura
 def fileFilter = [
         '**/R.class',
         '**/R$*.class',
@@ -26,48 +25,54 @@ def fileFilter = [
         '**/*ComposableSingletons*.*',
 ]
 
-// Registra a task que o CI vai chamar
 tasks.register('generateJacocoCoverageReport', JacocoReport) {
     group       = 'Reporting'
     description = 'Gera o relatório de cobertura JaCoCo para o build debug.'
 
-    // Deve rodar os testes antes de gerar o relatório
     dependsOn 'testDebugUnitTest'
 
     reports {
-        xml.required  = true   // necessário para a action Madrapps/jacoco-report
-        html.required = true   // útil para inspecionar localmente
+        xml.required  = true
+        html.required = true
         csv.required  = false
     }
 
-    // layout.buildDirectory é a API moderna que substitui o depreciado project.buildDir.
-    // .get().asFile resolve o DirectoryProperty para um java.io.File de forma eager,
-    // o que é seguro aqui pois estamos dentro de tasks.register (execução, não configuração).
     def buildDir = layout.buildDirectory.get().asFile
 
-    // Onde estão as classes compiladas (Kotlin → .class)
     def classesDir = fileTree(
-            dir: "${buildDir}/tmp/kotlin-classes/debug",
+            dir    : "${buildDir}/tmp/kotlin-classes/debug",
             excludes: fileFilter
     )
 
-    // Fallback para projetos Java puro ou AGP mais antigo
     def classesJavaDir = fileTree(
-            dir: "${buildDir}/intermediates/javac/debug/classes",
+            dir    : "${buildDir}/intermediates/javac/debug/classes",
             excludes: fileFilter
     )
 
     classDirectories.setFrom(files([classesDir, classesJavaDir]))
 
-    // Onde estão os fontes (para o relatório HTML mostrar o código)
-    sourceDirectories.setFrom(files([
-            "${project.projectDir}/src/main/java",
-            "${project.projectDir}/src/main/kotlin"
-    ]))
+    // A action Madrapps/jacoco-report resolve os <sourcefile> do XML
+    // relativos ao github.workspace (raiz do repositório), não ao módulo :app.
+    //
+    // Exemplo do que a action espera encontrar no workspace:
+    //   app/src/main/kotlin/com/example/LoginViewModel.kt
+    //
+    // Para isso funcionar, sourceDirectories deve apontar para a RAIZ do
+    // repositório. O JaCoCo vai então gerar no XML caminhos como:
+    //   <package name="app/src/main/kotlin/com/example">
+    //     <sourcefile name="LoginViewModel.kt">
+    // ...que a action consegue localizar corretamente.
+    sourceDirectories.setFrom(files([rootProject.projectDir]))
 
-    // Arquivo .exec gerado pelo testDebugUnitTest
+    // AGP 8+ pode gerar o arquivo .exec em diretórios diferentes dependendo da
+    // configuração de cobertura. Aqui cobrimos ambos os casos mais comuns:
+    //  - build/jacoco/testDebugUnitTest.exec
+    //  - build/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec
     executionData.setFrom(fileTree(
-            dir: buildDir,
-            includes: ['jacoco/testDebugUnitTest.exec']
+            dir     : buildDir,
+            includes: [
+                    'jacoco/testDebugUnitTest.exec',
+                    'outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec',
+            ]
     ))
 }

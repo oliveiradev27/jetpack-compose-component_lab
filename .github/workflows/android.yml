@@ -59,9 +59,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          # fetch-depth: 0 baixa o historico completo do repositorio.
-          # Sem isso, a action nao consegue calcular o diff dos arquivos
-          # alterados no PR e exibe "no coverage information present".
           fetch-depth: 0
 
       - name: Set up JDK 21
@@ -76,9 +73,6 @@ jobs:
 
       - name: Generate JaCoCo coverage report
         run: ./gradlew generateJacocoCoverageReport
-
-      - name: Verificar caminho do XML gerado
-        run: find . -name "generateJacocoCoverageReport.xml" | head -5
 
       - name: Upload coverage report
         if: always()
@@ -96,4 +90,3 @@ jobs:
           min-coverage-changed-files: 60
           update-comment: true
           title: '## Coverage Report'
-          debug-mode: true

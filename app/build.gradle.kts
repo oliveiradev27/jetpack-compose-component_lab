@@ -22,6 +22,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            // Necessário para o AGP gerar o arquivo .exec de cobertura
+            enableUnitTestCoverage = true
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
