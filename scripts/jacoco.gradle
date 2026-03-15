@@ -23,6 +23,7 @@ def fileFilter = [
         '**/hilt_aggregated_deps/**',
         // Compose gerados
         '**/*ComposableSingletons*.*',
+        '**/ui/theme/**'
 ]
 
 tasks.register('generateJacocoCoverageReport', JacocoReport) {
@@ -39,17 +40,25 @@ tasks.register('generateJacocoCoverageReport', JacocoReport) {
 
     def buildDir = layout.buildDirectory.get().asFile
 
-    def classesDir = fileTree(
-            dir    : "${buildDir}/tmp/kotlin-classes/debug",
+    // AGP 8+ mudou bastante a estrutura dos diretórios de classes.
+    // Em vez de apontar para um único caminho fixo, usamos um fileTree
+    // mais genérico que busca classes de produção embaixo de build/.
+    def mainKotlinClasses = fileTree(
+            dir: buildDir,
+            includes: [
+                    // Kotlin / Java de produção (AGP 9 com built_in_kotlinc)
+                    'intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes/**',
+                    // Fallbacks genéricos para outras versões/estruturas
+                    'tmp/kotlin-classes/debug/**',
+                    'intermediates/javac/debug/**/*.class',
+                    'intermediates/**/debug/*/classes/**',
+                    'classes/kotlin/debug/**',
+                    'classes/java/debug/**',
+            ],
             excludes: fileFilter
     )
 
-    def classesJavaDir = fileTree(
-            dir    : "${buildDir}/intermediates/javac/debug/classes",
-            excludes: fileFilter
-    )
-
-    classDirectories.setFrom(files([classesDir, classesJavaDir]))
+    classDirectories.setFrom(files([mainKotlinClasses]))
 
     // A action Madrapps/jacoco-report resolve os <sourcefile> do XML
     // relativos ao github.workspace (raiz do repositório), não ao módulo :app.

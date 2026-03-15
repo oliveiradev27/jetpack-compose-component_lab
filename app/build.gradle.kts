@@ -22,10 +22,6 @@ android {
     }
 
     buildTypes {
-        debug {
-            // Necessário para o AGP gerar o arquivo .exec de cobertura
-            enableUnitTestCoverage = true
-        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -49,6 +45,21 @@ android {
                 systemProperty("robolectric.logging", "stdout")
             }
          }
+    }
+}
+
+// Configuração extra para que Robolectric funcione bem com JaCoCo
+tasks.withType<Test>().configureEach {
+    // Evita problemas de verificação de bytecode com classes instrumentadas
+    jvmArgs(
+        "-noverify",
+        "-XX:+IgnoreUnrecognizedVMOptions",
+    )
+
+    // Ajustes específicos do agente JaCoCo para testes unitários (inclui classes "sem localização")
+    extensions.configure<JacocoTaskExtension>("jacoco") {
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
     }
 }
 

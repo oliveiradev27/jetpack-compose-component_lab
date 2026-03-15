@@ -72,7 +72,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Generate JaCoCo coverage report
-        run: ./gradlew generateJacocoCoverageReport
+        run: ./gradlew :app:testDebugUnitTest & ./gradlew app:generateJacocoCoverageReport
 
       - name: Upload coverage report
         if: always()
