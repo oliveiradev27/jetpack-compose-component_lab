@@ -72,7 +72,9 @@ jobs:
         run: chmod +x gradlew
 
       - name: Generate JaCoCo coverage report
-        run: ./gradlew :app:testDebugUnitTest & ./gradlew app:generateJacocoCoverageReport
+        # Executa testes e geração do relatório em sequência para evitar
+        # múltiplos daemons Kotlin e problemas com caches incrementais.
+        run: ./gradlew :app:testDebugUnitTest generateJacocoCoverageReport
 
       - name: Upload coverage report
         if: always()
